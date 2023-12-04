@@ -4,6 +4,8 @@ const gameBoard = (function (){
    const setSymbol = (index, symbol) => {
         if(boardArray[index] === ""){
             boardArray[index] = symbol;
+        } else{
+            console.log('a')
         }
    }
 
@@ -62,8 +64,63 @@ return {searchComb};
 
     })();
 
-    
 
+    const domfunct = (function(){
+        const grids = document.querySelectorAll('.grid-part');
+
+        const clickFunction = () =>{
+            grids.forEach(grid =>{
+                grid.addEventListener('click', (e) =>{
+                    if(gameBoard.boardArray[e.target.dataset.index] == ''){
+                        gameBoard.setSymbol(e.target.dataset.index, 'x');
+                        winGame.searchComb(gameBoard.boardArray);
+                        e.target.textContent = 'x';
+                        randomSymbol();
+                    }
+
+                })
+            })
+        }
+
+        const randomSymbol = () =>{
+            const number = Math.floor(Math.random() * 9)
+
+            grids.forEach(grid =>{
+                if(grid.dataset.index == number && gameBoard.boardArray[number] == ''){
+                    grid.textContent = 'o';
+                    gameBoard.setSymbol(number, 'o');
+                } 
+            })
+        }
+
+        return{clickFunction, randomSymbol}
+    })();
+
+    domfunct.clickFunction()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+    
 
 
 
