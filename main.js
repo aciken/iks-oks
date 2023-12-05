@@ -46,7 +46,8 @@ const winGame = (function(){
                 if(array[winCombinations[i][j]] == 'x'){
                     x++;
                 } else if(array[winCombinations[i][j]] == 'o'){
-                    o++
+                    o++;
+                    console.log(`broj o:${o}`);
                 }
 
                 if(x === 3){
@@ -73,28 +74,43 @@ return {searchComb};
                 grid.addEventListener('click', (e) =>{
                     if(gameBoard.boardArray[e.target.dataset.index] == ''){
                         gameBoard.setSymbol(e.target.dataset.index, 'x');
-                        winGame.searchComb(gameBoard.boardArray);
                         e.target.textContent = 'x';
-                        randomSymbol();
+                        randomSymbol(gameBoard.boardArray);
+                        winGame.searchComb(gameBoard.boardArray);
                     }
 
                 })
             })
         }
 
-        const randomSymbol = () =>{
-            const number = Math.floor(Math.random() * 9)
 
+        const randomSymbol = (array) =>{
+            let indexArr = [];
+            for(let i = 0; i < 9; i++){
+                console.log(array[i])
+                if(array[i] === ''){
+                    indexArr.push(i);
+                    console.log(indexArr)
+                }
+            }
+            const number = Math.floor(Math.random() * indexArr.length);
+            console.log(indexArr[number]);
             grids.forEach(grid =>{
-                if(grid.dataset.index == number && gameBoard.boardArray[number] == ''){
+                if(grid.dataset.index == indexArr[number]){
                     grid.textContent = 'o';
-                    gameBoard.setSymbol(number, 'o');
-                } 
+                    gameBoard.setSymbol(indexArr[number], 'o');
+                    console.log(gameBoard)
+                }
             })
         }
 
         return{clickFunction, randomSymbol}
     })();
+
+
+
+
+
 
     domfunct.clickFunction()
 
