@@ -1,19 +1,25 @@
 const gameBoard = (function (){
-   const boardArray = ["", "", "", "", "", "", "", "", ""];
+   let boardArray = ["", "", "", "", "", "", "", "", ""];
 
    const setSymbol = (index, symbol) => {
+    console.log(boardArray);
         if(boardArray[index] === ""){
             boardArray[index] = symbol;
         } else{
-            console.log('a')
         }
    }
 
-   const reset = () =>{
-    boardArray = ["", "", "", "", "", "", "", "", ""];
+   const restart = () =>{
+    domfunct.resetGrids(); 
+    for(let i = 0; i < boardArray.length; i++){
+        boardArray[i] = "";
+    }
+    console.log(boardArray);
    }
 
-   return { boardArray, setSymbol, reset};
+
+
+   return { boardArray, setSymbol, restart};
   
 })();
 
@@ -21,8 +27,10 @@ const player = function(symbol) {
 return{symbol};
 }
 
-const playerX = player('X');
-const playerO = player('O');
+const playerX = player('x');
+const playerO = player('o');
+
+console.log(playerO.symbol)
 
 const winGame = (function(){
     const winCombinations = [
@@ -51,9 +59,11 @@ const winGame = (function(){
                 }
 
                 if(x === 3){
-                    console.log('x pobeda');
+                    gameBoard.restart();
+
                 } else if(o === 3){
-                    console.log('o pobeda');
+                    gameBoard.restart();
+ 
                 }
                 
             }
@@ -73,8 +83,11 @@ return {searchComb};
             grids.forEach(grid =>{
                 grid.addEventListener('click', (e) =>{
                     if(gameBoard.boardArray[e.target.dataset.index] == ''){
+                        console.log(e.target.dataset.index)
                         gameBoard.setSymbol(e.target.dataset.index, 'x');
+                        console.log(gameBoard.boardArray)
                         e.target.textContent = 'x';
+                        console.log(gameBoard.boardArray);
                         randomSymbol(gameBoard.boardArray);
                         winGame.searchComb(gameBoard.boardArray);
                     }
@@ -90,29 +103,61 @@ return {searchComb};
                 console.log(array[i])
                 if(array[i] === ''){
                     indexArr.push(i);
-                    console.log(indexArr)
                 }
             }
             const number = Math.floor(Math.random() * indexArr.length);
-            console.log(indexArr[number]);
             grids.forEach(grid =>{
                 if(grid.dataset.index == indexArr[number]){
                     grid.textContent = 'o';
                     gameBoard.setSymbol(indexArr[number], 'o');
-                    console.log(gameBoard)
                 }
             })
+
+            for(let i = 0; i < gameBoard.boardArray.length; i++){
+                if(!gameBoard.boardArray.includes('x') || !gameBoard.boardArray.includes('o')){
+                    indexArr = [];
+                }
+            }
+
         }
 
-        return{clickFunction, randomSymbol}
+        const resetGrids = () =>{
+            grids.forEach(grid =>{
+                grid.textContent = '';
+            })
+
+            console.log('reset')
+        }
+
+        return{clickFunction, randomSymbol, resetGrids}
     })();
 
 
 
+    const ChoseWay = (function(){
+        const pvp = document.querySelector('.pvp');
+        const pva = document.querySelector('.pva');
+        const blackBack = document.querySelector('.black-back')
+
+        const chose = () =>{
+            pva.addEventListener('click', () =>{
+                domfunct.clickFunction()
+                console.log('asd')
+                blackBack.classList.add('chose');
+            })  
+
+            pvp.addEventListener('click', () =>{
+                blackBack.classList.add('chose');
+            })
+        }
+        return{chose}
+   
+    })();
+
+    
 
 
-
-    domfunct.clickFunction()
+ChoseWay.chose();
 
 
 
