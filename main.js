@@ -14,7 +14,6 @@ const gameBoard = (function (){
     for(let i = 0; i < boardArray.length; i++){
         boardArray[i] = "";
     }
-    console.log(boardArray);
    }
 
 
@@ -30,6 +29,12 @@ return{symbol};
 
 
 const winGame = (function(){
+    const winWrapper = document.querySelector('.win-wrapper');
+    const winScreen = document.querySelector('.win-screen');
+    const winState = document.querySelector('.win-state');
+    const playAgainBtn = document.querySelector('.play-again');
+
+
     const winCombinations = [
         [0,3,6],
         [0,1,2],
@@ -41,10 +46,22 @@ const winGame = (function(){
         [1,4,7],
     ]
 
+    const winMessage = (winner) =>{
+        winScreen.classList.add('clicked');
+        winWrapper.classList.add('clicked');
+        winState.textContent = `${winner} has won`;
+        playAgainBtn.addEventListener('click', () =>{
+            gameBoard.restart();
+            winWrapper.classList.remove('clicked');
+            winScreen.classList.remove('clicked');
+        })
+    }
+
     const searchComb = (array) =>{
         let x = 0;
         let o = 0;
         for(let i = 0; i < winCombinations.length; i++){
+            let gameOver = false;
             x = 0;
             o = 0;
             for(let j = 0; j < 3; j++){
@@ -52,17 +69,35 @@ const winGame = (function(){
                     x++;
                 } else if(array[winCombinations[i][j]] == 'o'){
                     o++;
-                    console.log(`broj o:${o}`);
                 }
 
-                if(x === 3){
-                    gameBoard.restart();
 
+                console.log(`${x} || ${o}`)
+                if(x === 3){
+                    console.log('win x')
+                    winMessage('x');
+                    gameOver = true;
+                    break
                 } else if(o === 3){
-                    gameBoard.restart();
- 
+                    console.log('win o')
+                    winMessage('o');
+                    gameOver = true;
+                    break
+                } else if(!gameBoard.boardArray.includes("") && x !== 3 && o !== 3){
+                    console.log('draw')
+                    winScreen.classList.add('clicked');
+                    winWrapper.classList.add('clicked');
+                    winState.textContent = `Draw`;
+                    playAgainBtn.addEventListener('click', () =>{
+                        gameBoard.restart();
+                        winWrapper.classList.remove('clicked');
+                        winScreen.classList.remove('clicked');
+                    })
                 }
                 
+            }
+            if(gameOver === true){
+                break;
             }
         }
 
@@ -84,11 +119,9 @@ return {searchComb};
             grids.forEach(grid =>{
                 grid.addEventListener('click', (e) =>{
                     if(gameBoard.boardArray[e.target.dataset.index] == ''){
-                        console.log(e.target.dataset.index)
                         gameBoard.setSymbol(e.target.dataset.index, symbol);
                         console.log(gameBoard.boardArray)
                         e.target.textContent = symbol;
-                        console.log(gameBoard.boardArray);
                         randomSymbol(gameBoard.boardArray ,symbol2);
                         winGame.searchComb(gameBoard.boardArray);
                     }
@@ -101,7 +134,6 @@ return {searchComb};
         const randomSymbol = (array, symbol) =>{
             let indexArr = [];
             for(let i = 0; i < 9; i++){
-                console.log(array[i])
                 if(array[i] === ''){
                     indexArr.push(i);
                 }
@@ -164,8 +196,6 @@ return {searchComb};
                 grids.forEach(grid =>{
                     grid.textContent = '';
                 })
-    
-                console.log('reset')
             }
 
             return{clickFunction, resetGrids}
@@ -183,8 +213,14 @@ return {searchComb};
         const choseX = document.querySelector('.chose-x');
         const choseO = document.querySelector('.chose-o');
         const popUp = document.querySelector('.pop-up');
+        const resetButton = document.querySelector('.button');
 
 
+        const resetFunct = () =>{
+            resetButton.addEventListener('click', () =>{
+                    gameBoard.restart();
+            })
+        }
 
         const choseSymbol = () =>{
             choseX.addEventListener('click', () =>{
@@ -207,11 +243,13 @@ return {searchComb};
                 blackBack.classList.add('chose');
                 popUp.classList.add('clicked');
                 choseSymbol();
+                resetFunct();
             })  
 
             pvp.addEventListener('click', () =>{
                 blackBack.classList.add('chose');
                 pvpFunct.clickFunction();
+                resetFunct();
             })
         }
         return{chose}
