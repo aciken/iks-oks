@@ -9,12 +9,17 @@
     box-sizing: border-box;
 }
 
+body{
+    font-family: 'CustomFont';
+}
+
 .all{
     position: relative;
     height: 100vh;
 }
 
 .iks-oks{
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
     display: grid;
     grid-template-columns:repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
@@ -34,6 +39,7 @@
 }
 
 .grid-part{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     font-family: 'CustomFont';
     scale: 95%;
     border-radius: 15px;
@@ -62,6 +68,10 @@
     align-items: center;
     z-index: 999;
 }
+
+
+
+
 
 .black-back.chose{
     display: none;
@@ -104,3 +114,72 @@
 .pva:hover{
 scale: 105%;
 }
+
+.second-black{
+    display: none;
+    background-color: rgba(0, 0, 0, .7);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 999;  
+}
+
+.second-black.clicked{
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.pop-up{
+    display: none;
+    padding: 100px 50px;
+    gap: 10px;
+    color:#7dd3fc;
+    background-color: #082f49;  
+}
+
+.pop-up.clicked{
+    display: flex;
+}
+
+.chose-x{
+    transform: translateY(-50px);
+    font-size: 10rem;
+    cursor: pointer;
+    text-align: center;
+    width: 50%;
+    height: 50px;
+    transition: .3s;
+}
+
+.chose-x:hover{
+ scale: 105%;
+}
+
+.chose-o{
+    transform: translateY(-50px);
+    font-size: 10rem;
+    cursor: pointer;
+    text-align: center;
+    width: 50%;
+    height: 50px;
+    transition: .3s;
+}
+
+.chose-o:hover{
+    scale: 105%;
+   }
+
+.button{
+
+    color: #1d4ed8;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px 15px;
+    margin: 10px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+

@@ -27,10 +27,7 @@ const player = function(symbol) {
 return{symbol};
 }
 
-const playerX = player('x');
-const playerO = player('o');
 
-console.log(playerO.symbol)
 
 const winGame = (function(){
     const winCombinations = [
@@ -76,19 +73,23 @@ return {searchComb};
     })();
 
 
+
+
+
+
     const domfunct = (function(){
         const grids = document.querySelectorAll('.grid-part');
 
-        const clickFunction = () =>{
+        const clickFunction = (symbol ,symbol2) =>{
             grids.forEach(grid =>{
                 grid.addEventListener('click', (e) =>{
                     if(gameBoard.boardArray[e.target.dataset.index] == ''){
                         console.log(e.target.dataset.index)
-                        gameBoard.setSymbol(e.target.dataset.index, 'x');
+                        gameBoard.setSymbol(e.target.dataset.index, symbol);
                         console.log(gameBoard.boardArray)
-                        e.target.textContent = 'x';
+                        e.target.textContent = symbol;
                         console.log(gameBoard.boardArray);
-                        randomSymbol(gameBoard.boardArray);
+                        randomSymbol(gameBoard.boardArray ,symbol2);
                         winGame.searchComb(gameBoard.boardArray);
                     }
 
@@ -97,7 +98,7 @@ return {searchComb};
         }
 
 
-        const randomSymbol = (array) =>{
+        const randomSymbol = (array, symbol) =>{
             let indexArr = [];
             for(let i = 0; i < 9; i++){
                 console.log(array[i])
@@ -108,8 +109,8 @@ return {searchComb};
             const number = Math.floor(Math.random() * indexArr.length);
             grids.forEach(grid =>{
                 if(grid.dataset.index == indexArr[number]){
-                    grid.textContent = 'o';
-                    gameBoard.setSymbol(indexArr[number], 'o');
+                    grid.textContent = symbol;
+                    gameBoard.setSymbol(indexArr[number], symbol);
                 }
             })
 
@@ -133,21 +134,84 @@ return {searchComb};
     })();
 
 
+    const pvpFunct = (function(){
+        const grids = document.querySelectorAll('.grid-part');
+
+        const clickFunction = () =>{
+            let symbolState = 'x';
+            grids.forEach(grid =>{
+                grid.addEventListener('click', (e) =>{
+                    if(gameBoard.boardArray[e.target.dataset.index] == ''){
+                        if(symbolState === 'x'){
+                            gameBoard.setSymbol(e.target.dataset.index, 'x');
+                            e.target.textContent = 'x';
+                            winGame.searchComb(gameBoard.boardArray);
+                            symbolState = 'o';
+                        } else{
+                            gameBoard.setSymbol(e.target.dataset.index, 'o');
+                            e.target.textContent = 'o';
+                            winGame.searchComb(gameBoard.boardArray);
+                            symbolState = 'x';
+                        }
+
+                    }
+
+                })
+            })
+        }
+
+            const resetGrids = () =>{
+                grids.forEach(grid =>{
+                    grid.textContent = '';
+                })
+    
+                console.log('reset')
+            }
+
+            return{clickFunction, resetGrids}
+        
+    })();
+
+    
+
 
     const ChoseWay = (function(){
         const pvp = document.querySelector('.pvp');
         const pva = document.querySelector('.pva');
-        const blackBack = document.querySelector('.black-back')
+        const blackBack = document.querySelector('.black-back');
+        const secondBlack = document.querySelector('.second-black');
+        const choseX = document.querySelector('.chose-x');
+        const choseO = document.querySelector('.chose-o');
+        const popUp = document.querySelector('.pop-up');
+
+
+
+        const choseSymbol = () =>{
+            choseX.addEventListener('click', () =>{
+            domfunct.clickFunction('x', 'o');
+            secondBlack.classList.remove('clicked');
+            popUp.classList.remove('clicked');
+            })
+
+            choseO.addEventListener('click', () =>{
+            domfunct.clickFunction('o', 'x');
+            secondBlack.classList.remove('clicked');
+            popUp.classList.remove('clicked');
+        })
+    }
+
 
         const chose = () =>{
             pva.addEventListener('click', () =>{
-                domfunct.clickFunction()
-                console.log('asd')
+                secondBlack.classList.add('clicked');
                 blackBack.classList.add('chose');
+                popUp.classList.add('clicked');
+                choseSymbol();
             })  
 
             pvp.addEventListener('click', () =>{
                 blackBack.classList.add('chose');
+                pvpFunct.clickFunction();
             })
         }
         return{chose}
